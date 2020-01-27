@@ -1,13 +1,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strconv"
 
 	"github.com/jonpalmisc/qdc/quartz"
-	"github.com/spf13/pflag"
 )
+
+const Version string = "0.2.0"
 
 // PrintFatal prints an error to stderr and terminates the program.
 func PrintFatal(msg string) {
@@ -21,11 +23,17 @@ func PrintFatal(msg string) {
 
 // ShowUsage prints the program's usage information.
 func ShowUsage() {
-	usage := "usage: qdc [options] <index>\n" +
-		"  -x, --mirror <index>\n" +
-		"  -r, --resolution <wxh>"
+	u := "Quartz Display Configurator " + Version + "\n"
+	u += "Copyright (c) 2019-2020 Jon Palmisciano\n\n"
+	u += "Usage:\n"
+	u += "  qdc [options] <display>\n"
+	u += "\n"
+	u += "Options:\n"
+	u += "  -r <size>      Set display resolution\n"
+	u += "  -x <target>    Mirror display to target\n"
+	u += "  -h             Show help & usage\n"
 
-	_, err := fmt.Fprintln(os.Stderr, usage)
+	_, err := fmt.Fprintln(os.Stderr, u)
 	if err != nil {
 		panic(err)
 	}
@@ -34,19 +42,19 @@ func ShowUsage() {
 }
 
 func main() {
-	mirror := pflag.IntP("mirror", "x", -1, "")
-	res := pflag.StringP("resolution", "r", "", "")
+	mirror := flag.Int("x", -1, "")
+	res := flag.String("r", "", "")
 
-	pflag.Usage = ShowUsage
-	pflag.Parse()
+	flag.Usage = ShowUsage
+	flag.Parse()
 
 	// Abort and show usage if we haven't received a display index.
-	if pflag.NArg() < 1 {
+	if flag.NArg() < 1 {
 		ShowUsage()
 	}
 
 	// Attempt to convert the supplied display index to a string.
-	idx, err := strconv.Atoi(pflag.Arg(0))
+	idx, err := strconv.Atoi(flag.Arg(0))
 	if err != nil {
 		PrintFatal("invalid display index")
 	}
