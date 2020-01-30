@@ -1,11 +1,11 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strconv"
 
+	flag "github.com/spf13/pflag"
 	"github.com/jonpalmisc/qdc/quartz"
 )
 
@@ -42,8 +42,8 @@ func ShowUsage() {
 }
 
 func main() {
-	mirror := flag.Int("x", -1, "")
-	res := flag.String("r", "", "")
+	mirror := flag.IntP("mirror", "x", -1, "")
+	res := flag.StringP("resolution", "r", "", "")
 
 	flag.Usage = ShowUsage
 	flag.Parse()
