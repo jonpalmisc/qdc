@@ -5,8 +5,8 @@ import (
 	"os"
 	"strconv"
 
-	flag "github.com/spf13/pflag"
 	"github.com/jonpalmisc/qdc/quartz"
+	flag "github.com/spf13/pflag"
 )
 
 const Version string = "0.2.0"
@@ -29,9 +29,9 @@ func ShowUsage() {
 	u += "  qdc [options] <display>\n"
 	u += "\n"
 	u += "Options:\n"
-	u += "  -r <size>      Set display resolution\n"
-	u += "  -x <target>    Mirror display to target\n"
-	u += "  -h             Show help & usage\n"
+	u += "  -r <size>      set the display resolution\n"
+	u += "  -x <target>    mirror the  display to target\n"
+	u += "  -h             show help & usage\n"
 
 	_, err := fmt.Fprintln(os.Stderr, u)
 	if err != nil {
