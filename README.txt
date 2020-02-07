@@ -1,4 +1,4 @@
-Quartz Display Configurator - Version 0.2.0
+Quartz Display Configurator - Version 0.2.2
 Copyright (c) 2019-2020 Jon Palmisciano
 
 1.  About

@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 
 	"github.com/jonpalmisc/qdc/quartz"
 	flag "github.com/spf13/pflag"
 )
 
-const Version string = "0.2.0"
+const Version string = "0.2.2"
 
 // PrintFatal prints an error to stderr and terminates the program.
 func PrintFatal(msg string) {
@@ -26,51 +25,42 @@ func ShowUsage() {
 	u := "Quartz Display Configurator " + Version + "\n"
 	u += "Copyright (c) 2019-2020 Jon Palmisciano\n\n"
 	u += "Usage:\n"
-	u += "  qdc [options] <display>\n"
+	u += "  qdc [options]\n"
 	u += "\n"
 	u += "Options:\n"
-	u += "  -r <size>      set the display resolution\n"
-	u += "  -x <target>    mirror the  display to target\n"
-	u += "  -h             show help & usage\n"
+	u += "  -d <display>    the display to adjust (defaults to main)\n"
+	u += "  -r <size>       set the display resolution\n"
+	u += "  -x <target>     mirror the  display to target\n"
+	u += "  -h              show help & usage\n"
 
 	_, err := fmt.Fprintln(os.Stderr, u)
 	if err != nil {
 		panic(err)
 	}
 
-	os.Exit(-1)
+	os.Exit(1)
 }
 
 func main() {
+	idx := flag.IntP("display", "d", 0, "")
 	mirror := flag.IntP("mirror", "x", -1, "")
 	res := flag.StringP("resolution", "r", "", "")
 
 	flag.Usage = ShowUsage
 	flag.Parse()
 
-	// Abort and show usage if we haven't received a display index.
-	if flag.NArg() < 1 {
-		ShowUsage()
-	}
-
-	// Attempt to convert the supplied display index to a string.
-	idx, err := strconv.Atoi(flag.Arg(0))
-	if err != nil {
-		PrintFatal("invalid display index")
-	}
-
 	// Make sure at least one operation has been requested.
 	if *mirror == -1 && *res == "" {
-		PrintFatal("no operation requested")
+		ShowUsage()
 	}
 
 	// Get all displays and ensure the selected display is in bounds.
 	displays := quartz.OnlineDisplays()
-	if idx >= len(displays) {
+	if *idx >= len(displays) {
 		PrintFatal("display index out of bounds")
 	}
 
-	display := quartz.OnlineDisplays()[idx]
+	display := quartz.OnlineDisplays()[*idx]
 
 	// Attempt to configure mirroring if it has been requested.
 	if *mirror != -1 {
